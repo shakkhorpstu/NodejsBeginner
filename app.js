@@ -1,3 +1,4 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -12,10 +13,10 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 // connect to mongodb & listen for requests
-const dbURI = "mongodb+srv://shakkhor_node_developer:ubyZiZ0ngTTjDmrO@cluster0.njh29.mongodb.net/node-demo-app?retryWrites=true&w=majority"
+const dbURI = process.env.MONGO_DB_SERVER;
 
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => console.log('connected with mongo'))
+  .then(result => console.log('Good to go'))
   .catch(err => console.log(err));
 
 // view engine setup
