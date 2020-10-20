@@ -18,8 +18,6 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(result => console.log('connected with mongo'))
   .catch(err => console.log(err));
 
-app.use(fileUpload());
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -29,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

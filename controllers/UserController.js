@@ -1,5 +1,8 @@
 const User = require('../models/user');
 
+/** 
+ * Get all users
+*/
 const index = (req, res) => {
     User.find().sort({ createdAt: -1 })
     .then(result => {
@@ -10,6 +13,9 @@ const index = (req, res) => {
     });
 }
 
+/** 
+ * Get single user instance
+*/
 const show = (req, res) => {
     User.findById(req.params.id)
     .then(response => {
@@ -20,8 +26,10 @@ const show = (req, res) => {
     })
 }
 
+/** 
+ * Store user
+*/
 const store = (req, res) => {
-    let data = req.body;
     let user = new User(req.body);
     user.save().then(response => {
         res.status(200).send(response);
@@ -31,6 +39,9 @@ const store = (req, res) => {
     })
 }
 
+/** 
+ * Update user instance 
+*/
 const update = (req, res) => {
     let data = req.body;
     User.findOneAndUpdate(
@@ -44,6 +55,9 @@ const update = (req, res) => {
     })
 }
 
+/** 
+ * Delete user
+*/
 const destroy = (req, res) => {
     User.findOneAndDelete({ _id: req.params.id }).then(response => {
       res.status(200).send(response);
@@ -53,6 +67,9 @@ const destroy = (req, res) => {
     })
 }
 
+/** 
+ * File upload
+*/
 const fileUpload = (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
