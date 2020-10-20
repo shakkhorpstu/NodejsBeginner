@@ -1,16 +1,12 @@
 var express = require('express');
 var router = express.Router();
-const User = require('../models/user');
+const UserController = require('../controllers/UserController');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  User.find().sort({ createdAt: -1 })
-    .then(result => {
-      res.send(result);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-});
+router.get('/', UserController.index);
+router.get('/:id', UserController.show);
+router.post('/', UserController.store);
+router.put('/:id', UserController.update);
+router.delete('/:id', UserController.destroy);
+router.post('/upload/file', UserController.fileUpload);
 
 module.exports = router;
