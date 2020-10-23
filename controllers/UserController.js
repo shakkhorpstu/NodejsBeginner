@@ -4,6 +4,14 @@ const User = require('../models/user');
  * Get all users
 */
 const index = (req, res) => {
+    if(req.session.cart) {
+        console.log(req.session.cart);
+    } else {
+        req.session.cart = [
+            {id: 1, name: 'Shakkhor'},
+            {id: 2, name: 'Yousuf'}
+        ];
+    }
     User.find().sort({ createdAt: -1 })
     .then(result => {
         res.status(200).send(result);
@@ -17,6 +25,9 @@ const index = (req, res) => {
  * Get single user instance
 */
 const show = (req, res) => {
+    if(req.session.cart) {
+        console.log(req.session.cart);
+    }
     User.findById(req.params.id)
     .then(response => {
         res.status(200).send(response);
