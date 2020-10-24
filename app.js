@@ -8,8 +8,7 @@ const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var router = require('./routes');
 
 var app = express();
 
@@ -38,8 +37,7 @@ app.use(session({
   cookie: { maxAge: 600000000 }
 })) 
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

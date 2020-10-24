@@ -1,4 +1,10 @@
 const User = require('../models/user');
+const Joi = require('@hapi/joi');
+
+const schema = Joi.object({
+    first_name: Joi.string().required(),
+    last_name: Joi.string().required()
+});
 
 /** 
  * Get all users
@@ -41,6 +47,11 @@ const show = (req, res) => {
  * Store user
 */
 const store = (req, res) => {
+    const { error } = schema.validate(req.body);
+    if(error) {
+        return res.status(422).send(error.details[0].message);
+    }
+    
     let user = new User(req.body);
     user.save().then(response => {
         res.status(200).send(response);
