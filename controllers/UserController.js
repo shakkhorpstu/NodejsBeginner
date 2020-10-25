@@ -1,9 +1,13 @@
 const User = require('../models/user');
 const Joi = require('@hapi/joi');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const schema = Joi.object({
     first_name: Joi.string().required(),
-    last_name: Joi.string().required()
+    last_name: Joi.string().required(),
+    email: Joi.string().required(),
+    password: Joi.string()
 });
 
 /** 
@@ -46,12 +50,15 @@ const show = (req, res) => {
 /** 
  * Store user
 */
-const store = (req, res) => {
+const store = async (req, res) => {
     const { error } = schema.validate(req.body);
     if(error) {
         return res.status(422).send(error.details[0].message);
     }
-    
+
+    const salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
+
     let user = new User(req.body);
     user.save().then(response => {
         res.status(200).send(response);
@@ -109,11 +116,32 @@ const fileUpload = (req, res) => {
       });
 }
 
+const demoLogin = async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
+    if(!user) {
+        return res.status(401).send('Invalid credentials');
+    }
+
+    const validPass = await bcrypt.compare(req.body.password, user.password);
+    if(!validPass) {
+        return res.status(401).send('Invalid credentials');
+    }
+
+    const token = await jwt.sign({ _id: user._id, name: user.first_name + ' ' + user.last_name }, process.env.JWT_SECRET);
+    return res.header('auth-token', token).send(token);
+}
+
+const authenticatedMethod = (req, res) => {
+    return res.send('Yap');
+}
+
 module.exports = {
     index,
     show,
     store,
     update,
     destroy,
-    fileUpload
+    fileUpload,
+    demoLogin,
+    authenticatedMethod
 }
