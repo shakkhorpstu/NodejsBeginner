@@ -132,7 +132,7 @@ const demoLogin = async (req, res) => {
 }
 
 const authenticatedMethod = (req, res) => {
-    return res.send('Yap');
+    return res.send('Yap. You can access this');
 }
 
 module.exports = {
